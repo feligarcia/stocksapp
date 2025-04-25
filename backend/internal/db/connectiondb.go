@@ -1,41 +1,32 @@
-package connectiondb
+package db
 
 import (
 	"context"
 	"fmt"
 	"os"
 	"github.com/joho/godotenv"
-	"github.com/jackc/pgx/v4"
-	"time"
+	"github.com/jackc/pgx/v5"
 )
 
-func dbconnect() error {
-
-	err := godotenv.Load("/root/stocksapp/.env")
+// DbConnect abre una conexión a la base de datos CockroachDB usando las variables de entorno y .env en backend.
+// Retorna *pgx.Conn y error, y usa sslmode=require por defecto.
+func DbConnect() (*pgx.Conn, error) {
+	err := godotenv.Load("/root/stocksapp/backend/.env") // busca .env en el cwd, que debe ser backend
 	if err != nil {
-		return fmt.Errorf("error cargando .env: %w", err)
+		// No es fatal, puede que las variables ya estén en el entorno
 	}
-
 	user := os.Getenv("USERDB")
 	pass := os.Getenv("PASSDB")
 	host := os.Getenv("HOSTDB")
 	database := os.Getenv("DATABASE")
-
-	dsn := fmt.Sprintf("postgresql://%s:%s@%s:26257/%s?sslmode=verify-full", user, pass, host, database)
+	if user == "" || pass == "" || host == "" || database == "" {
+		return nil, fmt.Errorf("faltan variables de entorno para la conexión: USERDB, PASSDB, HOSTDB, DATABASE")
+	}
+	dsn := fmt.Sprintf("postgresql://%s:%s@%s:26257/%s?sslmode=require", user, pass, host, database)
 	ctx := context.Background()
 	conn, err := pgx.Connect(ctx, dsn)
 	if err != nil {
-		return fmt.Errorf("failed to connect database: %w", err)
+		return nil, fmt.Errorf("failed to connect database: %w", err)
 	}
-	defer conn.Close(context.Background())	
-
-
-	var now time.Time
-	err = conn.QueryRow(ctx, "SELECT NOW()" ).Scan(&now)
-	if err != nil {
-		return fmt.Errorf("failed to execute query: %w", err)
-	}
-
-	fmt.Println(now)
-	return nil
+	return conn, nil
 }
