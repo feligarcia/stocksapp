@@ -20,7 +20,7 @@ func DbConnect() (*pgx.Conn, error) {
 	database := os.Getenv("DATABASE")
 	port := os.Getenv("PORTDB")
 	if port == "" {
-		port = "26257" // valor por defecto CockroachDB
+		port = "26257"
 	}
 	if user == "" || pass == "" || host == "" || database == "" {
 		return nil, fmt.Errorf("faltan variables de entorno para la conexión: USERDB, PASSDB, HOSTDB, DATABASE")
