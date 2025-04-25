@@ -3,17 +3,17 @@ package connectiondb
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"github.com/joho/godotenv"
 	"github.com/jackc/pgx/v4"
+	"time"
 )
 
-func dbconnect() {
+func dbconnect() error {
 
 	err := godotenv.Load("/root/stocksapp/.env")
 	if err != nil {
-		log.Fatalf("Error cargando .env: %v", err)
+		return fmt.Errorf("error cargando .env: %w", err)
 	}
 
 	user := os.Getenv("USERDB")
@@ -25,16 +25,17 @@ func dbconnect() {
 	ctx := context.Background()
 	conn, err := pgx.Connect(ctx, dsn)
 	if err != nil {
-		log.Fatal("failed to connect database", err)
+		return fmt.Errorf("failed to connect database: %w", err)
 	}
 	defer conn.Close(context.Background())	
 
 
 	var now time.Time
-	err = conn.QueryRow(ctx, "SELECT NOW()").Scan(&now)
+	err = conn.QueryRow(ctx, "SELECT NOW()" ).Scan(&now)
 	if err != nil {
-		log.Fatal("failed to execute query", err)
+		return fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	fmt.Println(now)
+	return nil
 }

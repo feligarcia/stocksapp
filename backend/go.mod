@@ -1,6 +1,6 @@
 module stocksapp/backend
 
-go 1.18
+go 1.21
 
 require (
 	github.com/Finnhub-Stock-API/finnhub-go/v2 v2.0.19

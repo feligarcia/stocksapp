@@ -108,6 +108,7 @@ func GetStocksQuote() {
 		fmt.Printf("  Precio más bajo del día: %.2f\n", *quote.L)
 	} else {
 		fmt.Println("  Precio más bajo del día: (sin datos)")
+		
 	}
 	if quote.Pc != nil {
 		fmt.Printf("  Precio al cierre del día anterior: %.2f\n", *quote.Pc)
