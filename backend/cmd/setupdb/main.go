@@ -31,5 +31,13 @@ func main() {
 		log.Fatal("Error creando la tabla 'basicfinancial': ", err)
 	}
 
+	// Crear tabla 'quote'
+	err = crdbpgxv5.ExecuteTx(context.Background(), conn, pgx.TxOptions{}, func(tx pgx.Tx) error {
+		return db.CrearTablaQuote(context.Background(), tx)
+	})
+	if err != nil {
+		log.Fatal("Error creando la tabla 'quote': ", err)
+	}
+
 	log.Println("Tablas creadas exitosamente.")
 }

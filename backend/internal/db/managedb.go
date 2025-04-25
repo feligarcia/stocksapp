@@ -41,6 +41,31 @@ func CrearTablaTickers(ctx context.Context, tx pgx.Tx) error {
     return nil
 }
 
+// Crea la tabla quote para almacenar datos de GetStocksQuote
+func CrearTablaQuote(ctx context.Context, tx pgx.Tx) error {
+    log.Println("Eliminando la tabla 'quote' si existe...")
+    if _, err := tx.Exec(ctx, "DROP TABLE IF EXISTS quote"); err != nil {
+        return err
+    }
+    log.Println("Creando la tabla 'quote'...")
+    query := `CREATE TABLE quote (
+        ticker STRING PRIMARY KEY REFERENCES tickers(ticker),
+        c FLOAT8,    -- Precio actual
+        d FLOAT8,    -- Cambio absoluto
+        dp FLOAT8,   -- Cambio porcentual
+        h FLOAT8,    -- Máximo del día
+        l FLOAT8,    -- Mínimo del día
+        o FLOAT8,    -- Precio de apertura
+        pc FLOAT8,   -- Precio de cierre anterior
+        t BIGINT     -- Timestamp
+    )`
+    if _, err := tx.Exec(ctx, query); err != nil {
+        return err
+    }
+    log.Println("Tabla 'quote' creada exitosamente.")
+    return nil
+}
+
 // Crea la tabla basicfinancial
 func CrearTablaBasicFinancial(ctx context.Context, tx pgx.Tx) error {
     log.Println("Eliminando la tabla 'basicfinancial' si existe...")

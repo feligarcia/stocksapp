@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// Para probar que DbConnect funcione y la conexión esté viva
 func TestDbConnect(t *testing.T) {
 	ctx := context.Background()
 	conn, err := DbConnect()
@@ -15,9 +14,9 @@ func TestDbConnect(t *testing.T) {
 	}
 	defer conn.Close(ctx)
 
-	// Verificar que se puede hacer una consulta
 	var now time.Time
-	err = conn.QueryRow(ctx, "SELECT NOW()").Scan(&now)
+	query := "SELECT NOW()"
+	err = conn.QueryRow(ctx, query).Scan(&now)
 	if err != nil {
 		t.Fatalf("No se pudo ejecutar SELECT NOW(): %v", err)
 	}
