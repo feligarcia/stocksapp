@@ -1,13 +1,23 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"stocksapp/backend/internal/handler"
+	"os"
+	"time"
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	http.HandleFunc("/", handler.HelloHandler)
-	log.Println("API corriendo en :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))	
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"hora_actual": time.Now().Format(time.RFC3339),
+		})
+	})
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	app.Listen(":" + port)
 }

@@ -18,7 +18,7 @@ func DbConnect() (*pgx.Conn, error) {
 	pass := os.Getenv("PASSDB")
 	host := os.Getenv("HOSTDB")
 	database := os.Getenv("DATABASE")
-	port := os.Getenv("PORT")
+	port := os.Getenv("PORTDB")
 	if port == "" {
 		port = "26257" // valor por defecto CockroachDB
 	}
