@@ -1,24 +1,25 @@
 <template>
-  <div class="recommend-bar-container" style="width:100%;">
+  <div class="relative w-full my-5">
     <!-- Flecha -->
-    <div class="recommend-arrow" :style="arrowStyle">
-      <span class="arrow">▼</span>
+    <!-- Flecha por fuera, apuntando la barra -->
+    <div class="absolute z-20 transition-all duration-300" :style="{ ...arrowStyle, top: '-5px' }">
+      <span class="text-yellow-300 text-2xl select-none drop-shadow">▼</span>
     </div>
     <!-- Etiquetas extremos -->
-    <div class="recommend-bar-labels">
-      <span class="label-sell">Sell</span>
-      <span class="label-buy">Buy</span>
+    <div class="flex justify-between items-center font-bold text-yellow-300 mb-1 text-base tracking-wide">
+      <span class="ml-1">Sell</span>
+      <span class="mr-1">Buy</span>
     </div>
     <!-- Barra con gradiente y marcas -->
-    <div class="recommend-bar-bg" :style="{ background: gradient, height: '6px', position: 'relative', borderRadius: '3px', margin: '0 0 10px 0' }">
+    <div class="relative w-full rounded bg-gray-900" :style="{ background: gradient, height: '6px', margin: '0 0 10px 0' }">
       <!-- Marcas extremos -->
-      <div class="tick tick-left" />
-      <div class="tick tick-right" />
+      <div class="absolute left-0 top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10"></div>
+      <div class="absolute right-0 top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10"></div>
       <!-- Marcas hold (a la izquierda y derecha del centro) -->
-      <div class="tick tick-hold-left" :style="holdTickStyle('left')" />
-      <div class="tick tick-hold-right" :style="holdTickStyle('right')" />
+      <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('left')"></div>
+      <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('right')"></div>
     </div>
-    <span v-if="latest.period" class="rec-period-date">(Fecha recomendación: {{ latest.period }})</span>
+    <span v-if="latest.period" class="block text-gray-400 text-xs mt-2">(Fecha recomendación: {{ latest.period }})</span>
   </div>
 </template>
 
@@ -116,127 +117,3 @@ function segmentStyle(key) {
   }
 }
 </script>
-
-<style scoped>
-.recommend-bar-container {
-  width: 100%;
-  position: relative;
-  margin: 18px 0 10px 0;
-}
-.recommend-bar-labels {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  color: #ffe600;
-  margin-bottom: 2px;
-  font-size: 1.1em;
-  letter-spacing: 1px;
-}
-.label-sell {
-  margin-left: 2px;
-}
-.label-buy {
-  margin-right: 2px;
-}
-.recommend-bar-bg {
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  border: none;
-  box-shadow: none;
-  outline: none;
-  background-clip: padding-box;
-  border-radius: 3px;
-  overflow: visible;
-  background: #232526;
-  display: flex;
-  flex-direction: row;
-  height: 32px;
-}
-.recommend-arrow {
-  position: absolute;
-  left: 0;
-  top: 16px; /* Justo debajo de la barra de 6px + margen */
-  z-index: 2;
-  font-size: 18px;
-  color: #ffe600;
-  transition: left 0.3s;
-  pointer-events: none;
-}
-.tick {
-  position: absolute;
-  width: 2px;
-  height: 18px;
-  background: #ffe600;
-  top: -6px;
-  z-index: 2;
-  border-radius: 1px;
-}
-.tick-left {
-  left: 0;
-}
-.tick-right {
-  right: 0;
-}
-.tick-hold-left {
-  left: 48%; /* Ajuste fino para el lado izquierdo de hold */
-}
-.tick-hold-right {
-  left: 52%; /* Ajuste fino para el lado derecho de hold */
-}
-
-
-
-.recommend-segment {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95em;
-  color: #181818;
-  font-weight: 700;
-  border-right: 1.5px solid #232526;
-}
-.recommend-segment:last-child {
-border-right: none;
-}
-.recommend-label {
-z-index: 2;
-}
-.recommend-arrow {
-position: absolute;
-top: -20px;
-transition: left 0.3s;
-z-index: 3;
-font-size: 1.7em;
-color: #ffe600;
-}
-.arrow {
-font-size: 1.5em;
-}
-.recommend-summary {
-margin-top: 10px;
-color: #fff;
-font-size: 1em;
-display: flex;
-flex-wrap: wrap;
-gap: 18px;
-align-items: center;
-  flex-wrap: wrap;
-  gap: 18px;
-
-}
-.rec-count {
-  color: #ffe600;
-}
-.rec-period {
-  color: #aaa;
-  font-size: 0.95em;
-}
-.rec-period-date {
-  color: #aaa;
-  font-size: 0.85em;
-  align-self: right;
-}
-</style>
