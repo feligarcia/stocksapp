@@ -88,6 +88,7 @@
 import LoaderBar from './LoaderBar.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useTickerDetailStore } from '../stores/tickerDetail'
 const router = useRouter()
 function goBack() {
   router.push('/')
@@ -113,22 +114,43 @@ const loadingNews = ref(true)
 const loading = ref(true)
 const loadingRecommendations = ref(true)
 const recommendationStore = useRecommendationStore()
+const tickerDetailStore = useTickerDetailStore()
 
 async function fetchDetails() {
   loading.value = true
   loadingCompany.value = true
   loadingQuote.value = true
   loadingNews.value = true
+  const now = Date.now()
+  const SIX_HOURS = 6 * 60 * 60 * 1000
+  const ONE_MIN = 60 * 1000
+  const ONE_HOUR = 60 * 60 * 1000
   try {
-    // Company
-    const companyRes = await fetch(`/api/companyinfo/${ticker}`)
-    company.value = await companyRes.json()
-    loadingCompany.value = false
-    // Quote
-    const quoteRes = await fetch(`/api/quotes/${ticker}`)
-    quote.value = await quoteRes.json()
-    loadingQuote.value = false
-    // Noticias
+    // Company Info (TTL 6h)
+    const cachedCompany = tickerDetailStore.companyInfo[ticker]
+    if (cachedCompany && (now - cachedCompany.lastFetched < SIX_HOURS)) {
+      company.value = cachedCompany.data
+      loadingCompany.value = false
+    } else {
+      const companyRes = await fetch(`/api/companyinfo/${ticker}`)
+      const data = await companyRes.json()
+      company.value = data
+      tickerDetailStore.setCompanyInfo(ticker, data)
+      loadingCompany.value = false
+    }
+    // Quote (TTL 1min)
+    const cachedQuote = tickerDetailStore.quotes[ticker]
+    if (cachedQuote && (now - cachedQuote.lastFetched < ONE_MIN)) {
+      quote.value = cachedQuote.data
+      loadingQuote.value = false
+    } else {
+      const quoteRes = await fetch(`/api/quotes/${ticker}`)
+      const data = await quoteRes.json()
+      quote.value = data
+      tickerDetailStore.setQuote(ticker, data)
+      loadingQuote.value = false
+    }
+    // Noticias (sin cache, opcional)
     const today = new Date();
     const to = today.toISOString().slice(0,10);
     const fromDate = new Date(today.getTime() - 30*24*60*60*1000); // 30 días atrás
@@ -137,11 +159,18 @@ async function fetchDetails() {
     const newsRes = await fetch(`https://finnhub.io/api/v1/company-news?symbol=${ticker}&from=${from}&to=${to}&token=${token}`);
     news.value = await newsRes.json();
     loadingNews.value = false
-    // Recomendaciones
-    const recRes = await fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${ticker}&token=${token}`);
-    const recData = await recRes.json();
-    recommendationStore.setRecommendations(recData);
-    loadingRecommendations.value = false;
+    // Recomendaciones (TTL 1h)
+    const cachedRec = tickerDetailStore.recommendations[ticker]
+    if (cachedRec && (now - cachedRec.lastFetched < ONE_HOUR)) {
+      recommendationStore.setRecommendations(cachedRec.data)
+      loadingRecommendations.value = false
+    } else {
+      const recRes = await fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${ticker}&token=${token}`);
+      const recData = await recRes.json();
+      recommendationStore.setRecommendations(recData);
+      tickerDetailStore.setRecommendations(ticker, recData)
+      loadingRecommendations.value = false;
+    }
   } catch (e) {
     company.value = null
     quote.value = null

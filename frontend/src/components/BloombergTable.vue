@@ -64,6 +64,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import LoaderBar from './LoaderBar.vue'
+import { useQuotesStore } from '../stores/quotes'
+import { storeToRefs } from 'pinia'
 
 function formatChange(n, percent = false) {
   if (n > 0) return `+${n}${percent ? '%' : ''}`;
@@ -71,7 +73,8 @@ function formatChange(n, percent = false) {
   return `0${percent ? '%' : ''}`;
 }
 
-const quotes = ref([])
+const quotesStore = useQuotesStore()
+const { quotes } = storeToRefs(quotesStore)
 const search = ref('')
 const sortKey = ref('ticker')
 const sortAsc = ref(true)
@@ -93,17 +96,24 @@ function openTicker(ticker) {
 const isLoading = ref(false)
 
 async function fetchData() {
+  // TTL de 1 minuto
+  const now = Date.now()
+  const ttl = 60 * 1000
+  if (quotes.value.length > 0 && quotesStore.lastFetched && (now - quotesStore.lastFetched < ttl)) {
+    return
+  }
   isLoading.value = true
   try {
     const data = await fetch('/api/quotes').then(r => r.json())
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    quotes.value = data.map(q => ({
+    const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const mapped = data.map(q => ({
       ticker: q.ticker,
       valor: q.c,
       valcambio: q.d,
       porcencambio: q.dp,
-      hora: now
+      hora
     }))
+    quotesStore.setQuotes(mapped)
   } finally {
     isLoading.value = false
   }
