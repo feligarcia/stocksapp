@@ -19,7 +19,9 @@
       </div>
       <div class="w-full max-w-5xl mx-auto bg-black/80 overflow-x-auto">
         <LoaderBar v-if="isLoading" />
-        <table v-else class="w-full border-collapse bg-gray-950/80 text-white text-base font-mono" style="font-family: 'Roboto Mono', 'Menlo', monospace;">
+          <div v-else>
+            <div v-if="errorQuotes" class="text-yellow-300 text-center my-6 text-xl">Sin conexión</div>
+            <table v-else class="w-full border-collapse bg-gray-950/80 text-white text-base font-mono" style="font-family: 'Roboto Mono', 'Menlo', monospace;">
           <thead>
             <tr>
               <th v-for="col in columns" :key="col.key"
@@ -53,7 +55,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div>      </div>
     </div>
   </div>
 </template>
@@ -94,6 +96,7 @@ function openTicker(ticker) {
 }
 
 const isLoading = ref(false)
+const errorQuotes = ref(false)
 
 async function fetchData() {
   // TTL de 1 minuto
@@ -103,6 +106,7 @@ async function fetchData() {
     return
   }
   isLoading.value = true
+  errorQuotes.value = false
   try {
     const data = await fetch('/api/quotes').then(r => r.json())
     const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -114,6 +118,8 @@ async function fetchData() {
       hora
     }))
     quotesStore.setQuotes(mapped)
+  } catch (e) {
+    errorQuotes.value = true
   } finally {
     isLoading.value = false
   }

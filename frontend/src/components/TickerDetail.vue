@@ -178,6 +178,7 @@ async function fetchDetails() {
     loadingCompany.value = false
     loadingQuote.value = false
     loadingNews.value = false
+    loadingRecommendations.value = false
   }
   loading.value = false
 }

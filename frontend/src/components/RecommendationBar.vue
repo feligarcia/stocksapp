@@ -1,7 +1,8 @@
 <template>
   <div class="relative w-full my-5">
     <LoaderBar v-if="loadingRecommendations" class="my-6" />
-    <template v-else>
+    <template v-else-if="latest && latest.period">
+      <!-- Flecha -->
       <!-- Flecha -->
       <!-- Flecha por fuera, apuntando la barra -->
       <div class="absolute z-20 transition-all duration-300" :style="{ ...arrowStyle, top: '-5px' }">
@@ -22,6 +23,9 @@
         <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('right')"></div>
       </div>
       <span v-if="latest.period" class="block text-gray-400 text-xs mt-2">(Fecha recomendación: {{ latest.period }})</span>
+    </template>
+    <template v-else>
+      <div class="text-yellow-300 text-center mt-2">Sin conexión</div>
     </template>
   </div>
 </template>
