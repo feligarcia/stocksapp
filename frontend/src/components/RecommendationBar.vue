@@ -1,34 +1,45 @@
 <template>
   <div class="relative w-full my-5">
-    <!-- Flecha -->
-    <!-- Flecha por fuera, apuntando la barra -->
-    <div class="absolute z-20 transition-all duration-300" :style="{ ...arrowStyle, top: '-5px' }">
-      <span class="text-yellow-300 text-2xl select-none drop-shadow">▼</span>
-    </div>
-    <!-- Etiquetas extremos -->
-    <div class="flex justify-between items-center font-bold text-yellow-300 mb-1 text-base tracking-wide">
-      <span class="ml-1">Sell</span>
-      <span class="mr-1">Buy</span>
-    </div>
-    <!-- Barra con gradiente y marcas -->
-    <div class="relative w-full rounded bg-gray-900" :style="{ background: gradient, height: '6px', margin: '0 0 10px 0' }">
-      <!-- Marcas extremos -->
-      <div class="absolute left-0 top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10"></div>
-      <div class="absolute right-0 top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10"></div>
-      <!-- Marcas hold (a la izquierda y derecha del centro) -->
-      <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('left')"></div>
-      <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('right')"></div>
-    </div>
-    <span v-if="latest.period" class="block text-gray-400 text-xs mt-2">(Fecha recomendación: {{ latest.period }})</span>
+    <LoaderBar v-if="loadingRecommendations" class="my-6" />
+    <template v-else>
+      <!-- Flecha -->
+      <!-- Flecha por fuera, apuntando la barra -->
+      <div class="absolute z-20 transition-all duration-300" :style="{ ...arrowStyle, top: '-5px' }">
+        <span class="text-yellow-300 text-2xl select-none drop-shadow">▼</span>
+      </div>
+      <!-- Etiquetas extremos -->
+      <div class="flex justify-between items-center font-bold text-yellow-300 mb-1 text-base tracking-wide">
+        <span class="ml-1">Sell</span>
+        <span class="mr-1">Buy</span>
+      </div>
+      <!-- Barra con gradiente y marcas -->
+      <div class="relative w-full rounded bg-gray-900" :style="{ background: gradient, height: '6px', margin: '0 0 10px 0' }">
+        <!-- Marcas extremos -->
+        <div class="absolute left-0 top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10"></div>
+        <div class="absolute right-0 top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10"></div>
+        <!-- Marcas hold (a la izquierda y derecha del centro) -->
+        <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('left')"></div>
+        <div class="absolute top-[-6px] w-[2px] h-4 bg-yellow-300 rounded z-10" :style="holdTickStyle('right')"></div>
+      </div>
+      <span v-if="latest.period" class="block text-gray-400 text-xs mt-2">(Fecha recomendación: {{ latest.period }})</span>
+    </template>
   </div>
 </template>
 
 <script setup>
+import LoaderBar from './LoaderBar.vue'
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRecommendationStore } from '../stores/recommendation'
 const recommendationStore = useRecommendationStore()
 const { recommendations } = storeToRefs(recommendationStore)
+
+const props = defineProps({
+  loadingRecommendations: {
+    type: Boolean,
+    required: true
+  }
+})
 
 const categories = [
   { key: 'strongSell', label: 'Strong Sell', color: '#e53935' }, // rojo intenso

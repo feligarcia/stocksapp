@@ -61,17 +61,14 @@
       </div>
       <div class="bg-black rounded-none shadow-none p-6 mt-6 border border-gray-500 border-b-2 border-b-gray-700 text-white">
         <h2 class="text-yellow-300 text-lg mb-3 font-bold tracking-wide">Recomendaciones de analistas</h2>
-        <div v-if="recommendationStore.recommendations && recommendationStore.recommendations.length">
-          <RecommendationBar />
-        </div>
-        <div v-else class="text-yellow-300 text-center mt-2">No hay recomendaciones recientes para este ticker.</div>
+        <RecommendationBar :loading-recommendations="loadingRecommendations" :recommendations="recommendationStore.recommendations" />
       </div>
       <div class="bg-black rounded-none shadow-none p-6 mt-6 border border-gray-500 border-b-2 border-b-gray-700 text-white">
         <h2 class="text-yellow-300 text-lg mb-3 font-bold tracking-wide">Noticias recientes</h2>
         <LoaderBar v-if="loadingNews" class="my-4" />
         <template v-else>
           <div v-if="news && news.length">
-            <div v-for="n in news" :key="n.id" class="flex items-start mb-4 border-2 border-white rounded-none bg-gray-900 p-3">
+            <div v-for="n in news" :key="n.id" class="flex items-start mb-4 border-2 border-white rounded-none bg-gray-900 p-3 cursor-pointer hover:bg-gray-800 transition-colors">
               <img v-if="n.image" :src="n.image" alt="news" class="w-16 h-16 object-cover rounded-md mr-4 bg-gray-800" />
               <div class="flex-1">
                 <a :href="n.url" class="text-yellow-300 font-bold underline text-base" target="_blank">{{ n.headline }}</a>
@@ -114,6 +111,7 @@ const loadingCompany = ref(true)
 const loadingQuote = ref(true)
 const loadingNews = ref(true)
 const loading = ref(true)
+const loadingRecommendations = ref(true)
 const recommendationStore = useRecommendationStore()
 
 async function fetchDetails() {
@@ -143,6 +141,7 @@ async function fetchDetails() {
     const recRes = await fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${ticker}&token=${token}`);
     const recData = await recRes.json();
     recommendationStore.setRecommendations(recData);
+    loadingRecommendations.value = false;
   } catch (e) {
     company.value = null
     quote.value = null

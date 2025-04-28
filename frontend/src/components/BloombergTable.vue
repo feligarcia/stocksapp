@@ -17,15 +17,15 @@
           @input="onSearch"
         />
       </div>
-      <div class="w-full max-w-5xl mx-auto bg-black/80 overflow-x-auto rounded">
+      <div class="w-full max-w-5xl mx-auto bg-black/80 overflow-x-auto">
         <LoaderBar v-if="isLoading" />
-        <table v-else class="w-full border-collapse bg-gray-950/80 text-white text-base">
+        <table v-else class="w-full border-collapse bg-gray-950/80 text-white text-base font-mono" style="font-family: 'Roboto Mono', 'Menlo', monospace;">
           <thead>
             <tr>
               <th v-for="col in columns" :key="col.key"
                   @click="sortBy(col.key)"
                   :class="[
-                    'bg-gray-800 font-extrabold px-3 py-2 h-8 min-h-[32px] border border-gray-700 cursor-pointer select-none transition-colors align-middle',
+                    'bg-black font-extrabold px-3 py-2 h-8 min-h-[32px] border border-gray-700 cursor-pointer select-none transition-colors align-middle',
                     col.key==='ticker' ? 'text-yellow-300' : '',
                     (col.key === 'valcambio' || col.key === 'porcencambio') && sortKey===col.key ? (sortAsc ? 'text-red-400' : 'text-green-400') : ''
                   ]">
@@ -35,8 +35,8 @@
             </tr>
           </thead>
           <tbody class="bg-black">
-            <tr v-for="row in filteredAndSortedQuotes" :key="row.ticker"
-                :class="[$index % 2 === 0 ? 'bg-gray-900/70' : 'bg-gray-800/70', 'hover:bg-gradient-to-r hover:from-gray-700 hover:to-gray-900 cursor-pointer transition-colors group']"
+            <tr v-for="(row, index) in filteredAndSortedQuotes" :key="row.ticker"
+                :class="[index % 2 === 0 ? 'bg-gray-900' : 'bg-[#232526]', 'hover:bg-gradient-to-r hover:from-gray-700 hover:to-gray-900 cursor-pointer transition-colors group']"
                 @mouseover="hovered = row.ticker"
                 @mouseleave="hovered = null"
                 @click="openTicker(row.ticker)"
