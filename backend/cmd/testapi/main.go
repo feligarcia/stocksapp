@@ -6,7 +6,7 @@ import (
 	"log"
 	"stocksapp/backend/internal/externalapi"
 )
-
+// 
 func main() {
     //Probando GetStocksQuote y GetCompanyProfile para un ticker
 	ticker := "AAPL"

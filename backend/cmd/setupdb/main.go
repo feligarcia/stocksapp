@@ -10,7 +10,7 @@ import (
 	crdbpgx "github.com/cockroachdb/cockroach-go/v2/crdb/crdbpgxv5"
 	"github.com/jackc/pgx/v5"
 )
-
+//Este archivo se usa para alimentar la base de datos de la información de la API
 func main() {
 
 	var listtickers = []string{"AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "BRK.B", "NVDA", "UNH", "JNJ",
