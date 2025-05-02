@@ -7,10 +7,10 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/jackc/pgx/v5"
 )
-//Conexion a la base de datos
+//Conexion a la base de datos reutilizable
 //sslmode=require por defecto, en proudcicon sslmode=verify-full.
 func DbConnect() (*pgx.Conn, error) {
-	err := godotenv.Load("/root/stocksapp/backend/.env") // busca .env en el cwd, que debe ser backend
+	err := godotenv.Load(".env") // busca .env en el cwd, que debe ser backend
 	if err != nil {
 		return nil, fmt.Errorf("fallo al cargar el archivo .env: %w", err)
 	}

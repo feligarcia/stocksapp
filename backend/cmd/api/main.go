@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"os"
-	"time"
 	"log"
 	"github.com/gofiber/fiber/v2"
 	"stocksapp/backend/internal/db"
@@ -33,11 +32,19 @@ func main() {
 		return c.JSON(company)
 	})
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"hora_actual": time.Now().Format(time.RFC3339),
+	distDir := "../frontend/dist"
+	if _, err := os.Stat(distDir); os.IsNotExist(err) {
+		app.Get("*", func(c *fiber.Ctx) error {
+			return c.JSON(fiber.Map{
+				"error": "server corriendo, dist no encontrado",
+			})
 		})
-	})
+	} else {
+		// Servir dist si el directorio existe
+		app.Static("/", distDir)
+	}
+	
+	
 
 	app.Get("/api/tickers", func(c *fiber.Ctx) error {
 		conn, err := db.DbConnect()
@@ -71,6 +78,7 @@ func main() {
 	return c.JSON(quotes)
 })
 
+//Si no hay un ticker en la URL se traen todos
 app.Get("/api/quotes/:ticker", func(c *fiber.Ctx) error {
 	conn, err := db.DbConnect()
 	if err != nil {

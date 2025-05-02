@@ -1,29 +1,28 @@
-# frontend
+# StocksApp - Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend en Vue 3 para la aplicación StocksApp, construido con Vite y conectado a una API en Go.
 
-## Recommended IDE Setup
+1. Clona el repositorio
+2. Configura las variables de entorno (ver abajo)
+3. Instala dependencias y ejecuta:
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Configura variables de entorno en .env.example
 
-## Customize configuration
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+Para ver el sitio en desarrollo ejecuta y visita http://localhost:5173/
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
-
-```sh
+Para ver el sitio estatico ejecuta y ve a http://localhost:4173/
+```bash
 npm run build
+npm run preview
 ```
+
+Para exponer en tu red 
+```bash
+npm run dev -- --host
+```
+

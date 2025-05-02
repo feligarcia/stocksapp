@@ -55,7 +55,7 @@ func CrearTablaQuote(ctx context.Context, tx pgx.Tx) error {
 	return nil
 }
 
-// Crea la tabla basicfinancial
+// Crea la tabla CompanyProfile
 func CrearTablaCompanyProfile(ctx context.Context, tx pgx.Tx) error {
 	log.Println("Creando la tabla 'companyprofile' si no existe...")
 	query := `CREATE TABLE IF NOT EXISTS companyprofile (

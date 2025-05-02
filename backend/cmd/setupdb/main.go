@@ -99,6 +99,6 @@ func main() {
 		time.Sleep(time.Second) //Esperar 1 segundo para cumplir el limite de la api free que son 60api call/min
 	}
 
-	log.Println("TODOS los Datos insertados exitosamente.")
+	log.Println("Todos los Datos insertados exitosamente.")
 
 }

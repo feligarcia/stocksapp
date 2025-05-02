@@ -5,6 +5,9 @@ import (
 	"time"
 	"github.com/jackc/pgx/v5"
 )
+
+//Querys para cada funcion de la api, seria como los service en nestjs
+//Traer perfil de una empresa
 func GetCompanyProfile(ctx context.Context, conn *pgx.Conn, ticker string) (*CompanyProfile, error) {
 	row := conn.QueryRow(ctx, `SELECT ticker, name, country, currency, exchange, finnhub_industry, ipo, logo, marketcap, acciones, web, telefono FROM companyprofile WHERE ticker = $1`, ticker)
 	var cp CompanyProfile
@@ -13,11 +16,11 @@ func GetCompanyProfile(ctx context.Context, conn *pgx.Conn, ticker string) (*Com
 	if err != nil {
 		return nil, err
 	}
-	cp.Ipo = ipo.Format("2006-01-02") // formato YYYY-MM-DD
+	cp.Ipo = ipo.Format("2025-12-30") // formato YYYY-MM-DD
 	return &cp, nil
 }
 
-// GetAllTickers returns all tickers from the database
+//Traer todos los tickers
 func GetAllTickers(ctx context.Context, conn *pgx.Conn) ([]string, error) {
 	rows, err := conn.Query(ctx, "SELECT ticker FROM tickers")
 	if err != nil {
@@ -36,10 +39,7 @@ func GetAllTickers(ctx context.Context, conn *pgx.Conn) ([]string, error) {
 	return tickers, nil
 }
 
-// Quote represents a row from the quote table
-// (puedes mover esto a un archivo de modelos si prefieres)
-
-// GetAllQuotes returns all quotes from the database
+//Traer todas las quotes
 func GetAllQuotes(ctx context.Context, conn *pgx.Conn) ([]Quote, error) {
 	rows, err := conn.Query(ctx, "SELECT ticker, c, d, dp, h, l, o, pc, t FROM quote")
 	if err != nil {
@@ -58,7 +58,7 @@ func GetAllQuotes(ctx context.Context, conn *pgx.Conn) ([]Quote, error) {
 	return quotes, nil
 }
 
-// GetQuotesByTicker returns the quote for a specific ticker
+//Traer todas las quotes de un ticker
 func GetQuotesByTicker(ctx context.Context, conn *pgx.Conn, ticker string) ([]Quote, error) {
 	rows, err := conn.Query(ctx, "SELECT ticker, c, d, dp, h, l, o, pc, t FROM quote WHERE ticker = $1", ticker)
 	if err != nil {

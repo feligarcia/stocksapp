@@ -2,9 +2,7 @@
   <div class="relative w-full my-5">
     <LoaderBar v-if="loadingRecommendations" class="my-6" />
     <template v-else-if="latest && latest.period">
-      <!-- Flecha -->
-      <!-- Flecha -->
-      <!-- Flecha por fuera, apuntando la barra -->
+      <!-- Flecha -->      
       <div class="absolute z-20 transition-all duration-300" :style="{ ...arrowStyle, top: '-5px' }">
         <span class="text-yellow-300 text-2xl select-none drop-shadow">▼</span>
       </div>

@@ -5,7 +5,7 @@
   >
     <div class="w-full max-w-2xl mx-auto">
       <div class="flex flex-col items-center mt-6 mb-6 select-none cursor-pointer" @click="goBack">
-        <span class="text-4xl text-yellow-400 leading-none">&#8592;</span>
+        <span class="text-4xl text-yellow-400 leading-none">←</span>
         <div class="text-yellow-400 text-lg font-bold mt-1 tracking-wide">Volver</div>
       </div>
       <div class="bg-white rounded-none p-3 text-center border-b-2 border-gray-800 mb-2">
@@ -89,6 +89,10 @@ import LoaderBar from './LoaderBar.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTickerDetailStore } from '../stores/tickerDetail'
+import RecommendationBar from './RecommendationBar.vue'
+import { useRoute } from 'vue-router'
+import { useRecommendationStore } from '../stores/recommendation'
+
 const router = useRouter()
 function goBack() {
   router.push('/')
@@ -99,9 +103,6 @@ function formatChange(n, percent = false) {
   if (n < 0) return `${n}${percent ? '%' : ''}`;
   return `0${percent ? '%' : ''}`;
 }
-import RecommendationBar from './RecommendationBar.vue'
-import { useRoute } from 'vue-router'
-import { useRecommendationStore } from '../stores/recommendation'
 
 const route = useRoute()
 const ticker = route.params.ticker

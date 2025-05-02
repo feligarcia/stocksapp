@@ -6,10 +6,6 @@
   </div>
 </template>
 
-<script setup>
-// No props needed for now
-</script>
-
 <style scoped>
 @keyframes loader-gradient {
   0% {
