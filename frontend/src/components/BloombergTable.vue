@@ -177,7 +177,7 @@ async function fetchData() {
   isLoading.value = true;
   errorQuotes.value = false;
   try {
-    const data = await fetch("/api/quotes").then((r) => r.json());
+    const data = await fetch("/api/quotes2/1").then((r) => r.json());
     const hora = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",

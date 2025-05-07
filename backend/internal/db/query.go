@@ -39,6 +39,42 @@ func GetAllTickers(ctx context.Context, conn *pgx.Conn) ([]string, error) {
 	return tickers, nil
 }
 
+func GetTickersPagination(ctx context.Context, conn *pgx.Conn, offset int, limit int) ([]string, error) {
+	rows, err := conn.Query(ctx, "SELECT ticker FROM tickers OFFSET $1 LIMIT $2", offset, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tickers []string
+	for rows.Next() {
+		var ticker string
+		if err := rows.Scan(&ticker); err != nil {
+			return nil, err
+		}
+		tickers = append(tickers, ticker)
+	}
+	return tickers, nil
+}
+
+func GetQuotesPagination(ctx context.Context, conn *pgx.Conn, offset int, limit int) ([]Quote, error) {
+    rows, err := conn.Query(ctx, "SELECT ticker, c, d, dp, h, l, o, pc, t FROM quote OFFSET $1 LIMIT $2", offset, limit)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var quotes []Quote
+    for rows.Next() {
+        var q Quote
+        err := rows.Scan(&q.Ticker, &q.C, &q.D, &q.Dp, &q.H, &q.L, &q.O, &q.Pc, &q.T)
+        if err != nil {
+            return nil, err
+        }
+        quotes = append(quotes, q)
+    }
+    return quotes, nil
+}
 //Traer todas las quotes
 func GetAllQuotes(ctx context.Context, conn *pgx.Conn) ([]Quote, error) {
 	rows, err := conn.Query(ctx, "SELECT ticker, c, d, dp, h, l, o, pc, t FROM quote")

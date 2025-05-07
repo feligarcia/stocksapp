@@ -2,10 +2,10 @@ import { defineStore } from 'pinia'
 
 export const useTickerDetailStore = defineStore('tickerDetail', {
   state: () => ({
-    companyInfo: {}, // { [ticker]: { data, lastFetched } }
-    quotes: {},      // { [ticker]: { data, lastFetched } }
-    recommendations: {}, // { [ticker]: { data, lastFetched } }
-    news: {} // { [ticker]: { data, lastFetched } }
+    companyInfo: {}, 
+    quotes: {},      
+    recommendations: {}, 
+    news: {} 
   }),
   actions: {
     setCompanyInfo(ticker, data) {

@@ -44,10 +44,10 @@ const props = defineProps({
 })
 
 const categories = [
-  { key: 'strongSell', label: 'Strong Sell', color: '#e53935' }, // rojo intenso
-  { key: 'sell', label: 'Sell', color: '#fb8c00' }, // naranja
+  { key: 'strongSell', label: 'Strong Sell', color: '#e53935' }, 
+  { key: 'sell', label: 'Sell', color: '#fb8c00' }, 
   { key: 'hold', label: 'Hold', color: '#ffe600' }, // amarillo
-  { key: 'buy', label: 'Buy', color: '#b2d900' }, // verde amarillento
+  { key: 'buy', label: 'Buy', color: '#b2d900' }, // verde 
   { key: 'strongBuy', label: 'Strong Buy', color: '#00bfae' } // verde intenso
 ]
 

@@ -122,6 +122,8 @@ async function fetchDetails() {
   loadingCompany.value = true
   loadingQuote.value = true
   loadingNews.value = true
+
+
   const now = Date.now()
   const SIX_HOURS = 6 * 60 * 60 * 1000
   const ONE_MIN = 60 * 1000
@@ -185,6 +187,8 @@ async function fetchDetails() {
 }
 
 onMounted(fetchDetails)
+
+//pendiente por hacer el color del valor con el valor anterior
 function priceColor(price, prevClose) {
   if (price > prevClose) return 'pos';
   if (price < prevClose) return 'neg';
