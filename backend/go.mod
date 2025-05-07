@@ -7,7 +7,6 @@ toolchain go1.23.8
 require (
 	github.com/Finnhub-Stock-API/finnhub-go/v2 v2.0.19
 	github.com/cockroachdb/cockroach-go/v2 v2.4.0
-	github.com/garrettladley/fiberpaginate/v2 v2.0.4
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/joho/godotenv v1.5.1
